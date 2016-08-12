@@ -1,0 +1,43 @@
+{
+  "version": "1.0.0-rc1-000",
+
+  "description": "Extensions for Dapper dot net.",
+  "authors": [ "Justin R. Buchanan" ],
+  "copyright": "Copyright © 2015 Cornerstone Solutions Group, Inc.",
+
+  "packOptions": {
+    "repository": {
+      "type": "svn",
+      "url": "https://svn.csgsolutions.com/svn/csg-caa/Namespace/Csg.Data.Dapper/trunk/"
+    },
+    "iconUrl": "http://packages.csgsolutions.com/icons/csg32.png",
+    "owners": [ "Cornerstone Solutions Group, Inc" ]
+  },
+
+
+  "buildOptions": {
+    "debugType": "portable"
+  },
+
+  "dependencies": {
+    "Csg.Data": "3.1.0-rc1-001",
+    "Dapper": "1.50.2"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "dependencies": {
+        "NETStandard.Library": "1.6.0"
+      }
+    },
+    "net461": {
+
+    }
+  },
+
+  "scripts": {
+    "postcompile": [
+      "dotnet pack --no-build --configuration %compile:Configuration%"
+    ]
+  }
+}
