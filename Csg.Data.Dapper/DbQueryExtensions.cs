@@ -13,6 +13,12 @@ namespace Csg.Data
 {
     public static class DapperDbQueryExtensions
     {
+        /// <summary>
+        /// Renders the given query and executes it using Dapper.SqlMapper.Query().
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <returns></returns>
         public static IEnumerable<T> ExecuteMap<T>(this IDbQueryBuilder query)
         {
             var stmt = query.Render();
@@ -32,6 +38,12 @@ namespace Csg.Data
             return Dapper.SqlMapper.Query<T>(query.Connection, cmd);
         }
 
+        /// <summary>
+        /// Renders the given query and executes it using Dapper.SqlMapper.QueryAsync().
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <returns></returns>
         public static Task<IEnumerable<T>> ExecuteMapAsync<T>(this IDbQueryBuilder query)
         {
             var stmt = query.Render();
@@ -51,11 +63,26 @@ namespace Csg.Data
             return Dapper.SqlMapper.QueryAsync<T>(query.Connection, cmd);
         }
 
+        /// <summary>
+        /// Adds an equals condition to the given query's where clause for the given field and string value.
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="fieldName"></param>
+        /// <param name="equalsValue"></param>
+        /// <returns></returns>
         public static IDbQueryWhereClause FieldEquals(this IDbQueryWhereClause query, string fieldName, DbString equalsValue)
         {
             return query.FieldMatch(fieldName, SqlOperator.Equal, equalsValue);
         }
 
+        /// <summary>
+        /// Adds a condition to the given query's where clause using the given values.
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="fieldName">The field name on which to compare.</param>
+        /// <param name="operator">The operator to use.</param>
+        /// <param name="value">The value that will be compared against the field.</param>
+        /// <returns></returns>
         public static IDbQueryWhereClause FieldMatch(this IDbQueryWhereClause query, string fieldName, Csg.Data.Sql.SqlOperator @operator, DbString value)
         {
             var filter = new Csg.Data.Sql.SqlCompareFilter<string>(query.Root, fieldName, @operator, value.Value);
@@ -87,6 +114,14 @@ namespace Csg.Data
             return query;
         }
 
+        /// <summary>
+        /// Adds a string pattern matching filter to the query's where clause.
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="fieldName"></param>
+        /// <param name="operator"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static IDbQueryWhereClause StringMatch(this IDbQueryWhereClause query, string fieldName, Csg.Data.Sql.SqlWildcardDecoration @operator, DbString value)
         {
             var filter = new Csg.Data.Sql.SqlStringMatchFilter(query.Root, fieldName, @operator, value.Value);
@@ -118,6 +153,15 @@ namespace Csg.Data
             return query;
         }
 
+        /// <summary>
+        /// Adds a condition to the given query's where clause using the given values.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <param name="fieldName"></param>
+        /// <param name="operator"></param>
+        /// <param name="date"></param>
+        /// <returns></returns>
         public static IDbQueryWhereClause FieldMatch<T>(this IDbQueryWhereClause query, string fieldName, SqlOperator @operator, DbDate<T> date) where T: struct
         {
             query.AddFilter(new Csg.Data.Sql.SqlCompareFilter(query.Root, fieldName, @operator, date.GetDbType(), date.Value));
@@ -125,6 +169,15 @@ namespace Csg.Data
             return query;
         }
 
+        /// <summary>
+        /// Adds a range condition to the given query's where clause.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <param name="fieldName"></param>
+        /// <param name="begin"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
         public static IDbQueryWhereClause FieldBetween<T>(this IDbQueryWhereClause query, string fieldName, DbDate<T> begin, DbDate<T> end) where T : struct
         {
             query.FieldMatch(fieldName, SqlOperator.GreaterThanOrEqual, begin).FieldMatch(fieldName, SqlOperator.LessThanOrEqual, end);

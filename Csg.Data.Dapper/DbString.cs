@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Csg.Data
 {
+    /// <summary>
+    /// Provides a string type that has additional database string type information.
+    /// </summary>
     public sealed class DbString : Dapper.SqlMapper.ICustomQueryParameter, Csg.Data.IDbTypeProvider
     {
         /// <summary>
@@ -62,7 +65,7 @@ namespace Csg.Data
         {
             if (IsFixedLength && Length == -1)
             {
-                throw new InvalidOperationException("If specifying IsFixedLength,  a Length must also be specified");
+                throw new InvalidOperationException("If specifying IsFixedLength, a Length must also be specified");
             }
 
             var param = command.CreateParameter();

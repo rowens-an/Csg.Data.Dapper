@@ -1,9 +1,9 @@
 {
-  "version": "1.0.0-rc2",
+  "version": "1.0.0",
 
-  "description": "Extensions for Dapper dot net.",
+  "description": "Extensions to use Dapper with Csg.Data.",
   "authors": [ "Justin R. Buchanan" ],
-  "copyright": "Copyright � 2015 Cornerstone Solutions Group, Inc.",
+  "copyright": "Copyright 2017 Cornerstone Solutions Group, Inc.",
 
   "packOptions": {
     "repository": {

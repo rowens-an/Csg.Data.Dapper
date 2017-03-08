@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 
 namespace Csg.Data
 {
-
-
     /// <summary>
     /// Represents a date and/or time value and it's associated database data type.
     /// </summary>
