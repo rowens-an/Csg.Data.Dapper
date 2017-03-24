@@ -3,47 +3,51 @@ setlocal
 
 SET SOLUTION=Csg.Data.Dapper.sln
 SET BUILD_CONFIG=Release
+SET TEST_PROJ=
 SET EnableNuGetPackageRestore=True
 
-set MSBuild="%ProgramFiles(x86)%\MSBuild\14.0\Bin\MSBuild.exe"
-if not exist %MSBuild% @set MSBuild="%ProgramFiles(x86)%\MSBuild\12.0\Bin\MSBuild.exe"
-if not exist %MSBuild% @set MSBuild="%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe"
+ECHO ----- RESTORING -----
+dotnet restore %SOLUTION%
+IF ERRORLEVEL 1 GOTO RestoreFail
 
-set MSTest="C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\MSTest.exe"
-if not exist %MSTest% @set MSTest="C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\MSTest.exe"
+ECHO ----- BUILDING -----
 
-IF NOT EXIST .\bin\	MKDIR .\bin\
-IF EXIST .\bin\%BUILD_CONFIG% RMDIR /Q /S .\bin\%BUILD_CONFIG%
-
-ECHO BUILDING...
-
-dotnet restore
-
-ECHO . > .\bin\msbuild-%BUILD_CONFIG%.log
-%MSBuild% %SOLUTION% /p:Configuration=%BUILD_CONFIG% /v:M /flp:LogFile=.\bin\msbuild-%BUILD_CONFIG%.log;Verbosity=Normal
+dotnet build %SOLUTION% --configuration %BUILD_CONFIG%
 IF ERRORLEVEL 1 GOTO BuildFail
 
-REM ECHO TESTING...
-REM dotnet test .\Csg.Data.Dapper.Tests
-REM IF ERRORLEVEL 1 GOTO TestFail
+::ECHO ----- TESTING -----
+::dotnet test %TEST_PROJ% --no-build --configuration %BUILD_CONFIG%
+::IF ERRORLEVEL 1 GOTO TestFail
 
-popd
+ECHO ----- PACKAGING -----
+dotnet pack %SOLUTION% --no-build --configuration %BUILD_CONFIG%
+IF ERRORLEVEL 1 GOTO PackageFail
 
-GOTO End
+GOTO BuildSuccess
+
+:RestoreFail
+echo.
+echo *** RESTORE FAILED ***
+EXIT /b 1
 
 :BuildFail
 echo.
 echo *** BUILD FAILED ***
-EXIT /b 1
+EXIT /b 2
 
 :TestFail
 echo.
 echo *** TESTS FAILED ***
-EXIT /b 2
+EXIT /b 3
+
+:PackageFail
+echo.
+echo *** PACKAGING FAILED ***
+EXIT /b 4
 
 :BuildSuccess
 echo.
-echo *** BUILD SUCCESSFUL ***
+echo *** RESTORE + BUILD + TEST SUCCESSFUL ***
 goto End
 
 :End
