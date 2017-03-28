@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+  <Import Project="$(MSBuildExtensionsPath)\Csg\CSharpAddBuildAttributes.props" Condition=" exists('$(MSBuildExtensionsPath)\Csg\CSharpAddBuildAttributes.props') " />
   <PropertyGroup>
     <Description>Extensions to use Dapper with Csg.Data.</Description>
     <Copyright>Copyright 2017 Cornerstone Solutions Group, Inc.</Copyright>
@@ -12,6 +12,7 @@
     <RepositoryType>svn</RepositoryType>
     <RepositoryUrl>https://svn.csgsolutions.com/svn/csg-caa/Namespace/Csg.Data.Dapper/trunk/</RepositoryUrl>
     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.6' ">1.6.0</NetStandardImplicitPackageVersion>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
