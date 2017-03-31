@@ -4,6 +4,7 @@ setlocal
 SET SOLUTION=Csg.Data.Dapper.sln
 SET BUILD_CONFIG=Release
 SET TEST_PROJ=
+SET PACK_PROJ=.\Csg.Data.Dapper\Csg.Data.Dapper.csproj
 SET EnableNuGetPackageRestore=True
 
 ECHO ----- RESTORING -----
@@ -20,7 +21,7 @@ IF ERRORLEVEL 1 GOTO BuildFail
 ::IF ERRORLEVEL 1 GOTO TestFail
 
 ECHO ----- PACKAGING -----
-dotnet pack %SOLUTION% --no-build --configuration %BUILD_CONFIG%
+dotnet pack %PACK_PROJ% --no-build --configuration %BUILD_CONFIG%
 IF ERRORLEVEL 1 GOTO PackageFail
 
 GOTO BuildSuccess
