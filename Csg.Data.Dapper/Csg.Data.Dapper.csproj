@@ -12,11 +12,11 @@
     <RepositoryType>svn</RepositoryType>
     <RepositoryUrl>https://svn.csgsolutions.com/svn/csg-caa/Namespace/Csg.Data.Dapper/trunk/</RepositoryUrl>
     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.6' ">1.6.0</NetStandardImplicitPackageVersion>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Csg.Data" Version="3.1.6" />
+    <PackageReference Include="Csg.Data" Version="3.1.7" />
     <PackageReference Include="Dapper" Version="1.50.2" />
   </ItemGroup>
 
