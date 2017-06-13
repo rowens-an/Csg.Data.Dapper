@@ -18,8 +18,9 @@ namespace Csg.Data
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="query"></param>
+        /// <param name="commandFlags"></param>
         /// <returns></returns>
-        public static IEnumerable<T> ExecuteMap<T>(this IDbQueryBuilder query)
+        public static IEnumerable<T> ExecuteMap<T>(this IDbQueryBuilder query, CommandFlags commandFlags = CommandFlags.Buffered)
         {
             var stmt = query.Render();
             var parameters = new Dapper.DynamicParameters();
@@ -27,7 +28,8 @@ namespace Csg.Data
                 commandType: System.Data.CommandType.Text,
                 parameters: parameters,
                 transaction: query.Transaction,
-                commandTimeout: query.CommandTimeout
+                commandTimeout: query.CommandTimeout,
+                flags: commandFlags
             );
 
             foreach (var param in stmt.Parameters)
@@ -43,8 +45,9 @@ namespace Csg.Data
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="query"></param>
+        /// <param name="commandFlags"></param>
         /// <returns></returns>
-        public static Task<IEnumerable<T>> ExecuteMapAsync<T>(this IDbQueryBuilder query)
+        public static Task<IEnumerable<T>> ExecuteMapAsync<T>(this IDbQueryBuilder query, CommandFlags commandFlags = CommandFlags.Buffered)
         {
             var stmt = query.Render();
             var parameters = new Dapper.DynamicParameters();
@@ -52,7 +55,8 @@ namespace Csg.Data
                 commandType: System.Data.CommandType.Text,
                 parameters: parameters,
                 transaction: query.Transaction,
-                commandTimeout: query.CommandTimeout
+                commandTimeout: query.CommandTimeout,
+                flags: commandFlags
             );
 
             foreach (var param in stmt.Parameters)
