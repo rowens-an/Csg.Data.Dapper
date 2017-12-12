@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="$(CI_BUILDTOOLS)\Targets\CSharpAddBuildAttributes.targets" Condition=" '$(CI_BUILDTOOLS)' != '' " />
+  <Import Project="$(CI_BUILDTOOLS)\msbuild\Build.targets" Condition=" '$(CI_BUILDTOOLS)' != '' " />
   <PropertyGroup>
     <Description>Extensions to use Dapper with Csg.Data.</Description>
     <Copyright>Copyright 2017 Cornerstone Solutions Group, Inc.</Copyright>
