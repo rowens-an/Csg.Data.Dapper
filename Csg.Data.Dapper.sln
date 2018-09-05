@@ -5,9 +5,11 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{7A7F9514-C48D-4521-9A8F-165DF39B23F7}"
 	ProjectSection(SolutionItems) = preProject
 		build.cmd = build.cmd
+		build.ps1 = build.ps1
+		build\sources.props = build\sources.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Csg.Data.Dapper", "Csg.Data.Dapper\Csg.Data.Dapper.csproj", "{533F4E01-AA6B-449D-B57D-D6FBCAEDA1B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Csg.Data.Dapper", "Csg.Data.Dapper\Csg.Data.Dapper.csproj", "{533F4E01-AA6B-449D-B57D-D6FBCAEDA1B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,6 +24,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EF6E99CA-4F1F-43A4-90A9-4CCC82192097}
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Csg.Core.vsmdi

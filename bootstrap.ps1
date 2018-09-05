@@ -43,15 +43,19 @@ function Get-BuildTools(
 	Write-Host "Initializing build tools..." -NoNewline
 
 	if ($env:CI_BUILDTOOLS_PATH) {
-		$remotePath = "$($env:CI_BUILDTOOLS_PATH)/$version.zip"
+		$remotePath = "$($env:CI_BUILDTOOLS_PATH)/$Version.zip"
 	} else {
-		$remotePath = "https://github.com/csgsolutions/BuildTools/archive/$version.zip"
+		$remotePath = "https://csgstorpub.blob.core.windows.net/buildtools/BuildTools-$Version.zip"
 	}
 	
-	$localPath = ".\BuildTools-$version"
+	$localPath = ".\obj\BuildTools-$Version"
+
+	if ( !(Test-Path .\obj)){
+		mkdir .\obj
+	}
 		
 	if ( !(Test-Path $localPath) ){
-		Get-RemoteFile $remotePath "BuildTools-$version.zip" | Expand-ZipFile -DestinationPath "./"		
+		Get-RemoteFile $remotePath ".\obj\BuildTools-$Version.zip" | Expand-ZipFile -DestinationPath $localPath
 	}
 	
 	if ( !(Test-Path $localPath) ){
@@ -64,9 +68,8 @@ function Get-BuildTools(
 		$env:CI_BUILDTOOLS = $absolutePath
 	}
 		
-	Import-Module "$absolutePath\modules\msbuild.psm1"
-	Import-Module "$absolutePath\modules\nuget.psm1"
-	
+	Import-Module "$absolutePath\BuildTools.psd1"
+
 	Write-Host "Done`r`n"
 
 	return $absolutePath 

@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <EnableCsgDevRestoreSources>true</EnableCsgDevRestoreSources>
+  </PropertyGroup>
+  <PropertyGroup>
+	<PackageIconUrl>http://packages.csgsolutions.com/icons/csg32.png</PackageIconUrl>	
+    <PackageProjectUrl>https://github.com/csgsolutions/csg.data.dapper</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/csgsolutions/Csg.Data.Dapper/blob/master/LICENSE</PackageLicenseUrl>
+    <Owner>CSG</Owner>
+    <Authors>CSG</Authors>
+    <Copyright>2018 Cornerstone Solutions Group</Copyright>
+  </PropertyGroup>
+</Project>

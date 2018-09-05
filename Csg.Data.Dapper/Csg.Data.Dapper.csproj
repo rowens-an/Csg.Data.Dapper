@@ -1,18 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="$(CI_BUILDTOOLS)\msbuild\Build.targets" Condition=" '$(CI_BUILDTOOLS)' != '' " />
   <PropertyGroup>
     <Description>Extensions to use Dapper with Csg.Data.</Description>
-    <Copyright>Copyright 2017 Cornerstone Solutions Group, Inc.</Copyright>
-    <Authors>Justin R. Buchanan</Authors>
-    <TargetFrameworks>netstandard1.6;net451;net452;net461</TargetFrameworks>
+    <TargetFrameworks>netstandard1.6;netstandard2.0;net451;net452;net461</TargetFrameworks>
     <DebugType>portable</DebugType>
     <AssemblyName>Csg.Data.Dapper</AssemblyName>
-    <PackageId>Csg.Data.Dapper</PackageId>
-    <PackageIconUrl>http://packages.csgsolutions.com/icons/csg32.png</PackageIconUrl>
-    <RepositoryType>svn</RepositoryType>
-    <RepositoryUrl>https://svn.csgsolutions.com/svn/csg-caa/Namespace/Csg.Data.Dapper/trunk/</RepositoryUrl>
+    <PackageId>Csg.Data.Dapper</PackageId>    
     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.6' ">1.6.0</NetStandardImplicitPackageVersion>
-    <Version>1.0.4</Version>
   </PropertyGroup>
 
   <ItemGroup>
