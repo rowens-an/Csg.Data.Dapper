@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>Extensions to use Dapper with Csg.Data.</Description>
-    <TargetFrameworks>netstandard1.6;netstandard2.0;net451;net452;net461</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net451;net461;net472</TargetFrameworks>
     <DebugType>portable</DebugType>
     <AssemblyName>Csg.Data.Dapper</AssemblyName>
     <PackageId>Csg.Data.Dapper</PackageId>    
@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Csg.Data" Version="3.1.7" />
+    <PackageReference Include="Csg.Data" Version="3.3.0-preview-00012" />
     <PackageReference Include="Dapper" Version="1.50.2" />
   </ItemGroup>
 

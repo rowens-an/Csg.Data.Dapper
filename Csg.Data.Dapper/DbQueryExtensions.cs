@@ -14,13 +14,12 @@ namespace Csg.Data
     public static class DapperDbQueryExtensions
     {
         /// <summary>
-        /// Renders the given query and executes it using Dapper.SqlMapper.Query().
+        /// Creates a dapper command definition from the given query.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="query"></param>
         /// <param name="commandFlags"></param>
         /// <returns></returns>
-        public static IEnumerable<T> ExecuteMap<T>(this IDbQueryBuilder query, CommandFlags commandFlags = CommandFlags.Buffered)
+        public static Dapper.CommandDefinition CreateDapperCommand(this IDbQueryBuilder query, CommandFlags commandFlags = CommandFlags.Buffered)
         {
             var stmt = query.Render();
             var parameters = new Dapper.DynamicParameters();
@@ -37,7 +36,19 @@ namespace Csg.Data
                 parameters.Add(param.ParameterName, param.Value, param.DbType, System.Data.ParameterDirection.Input, param.Size > 0 ? (int?)param.Size : null);
             }
 
-            return Dapper.SqlMapper.Query<T>(query.Connection, cmd);
+            return cmd;
+        }
+
+        /// <summary>
+        /// Renders the given query and executes it using Dapper.SqlMapper.Query().
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <param name="commandFlags"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> Query<T>(this IDbQueryBuilder query, CommandFlags commandFlags = CommandFlags.Buffered)
+        {
+            return Dapper.SqlMapper.Query<T>(query.Connection, CreateDapperCommand(query, commandFlags));
         }
 
         /// <summary>
@@ -47,148 +58,11 @@ namespace Csg.Data
         /// <param name="query"></param>
         /// <param name="commandFlags"></param>
         /// <returns></returns>
-        public static Task<IEnumerable<T>> ExecuteMapAsync<T>(this IDbQueryBuilder query, CommandFlags commandFlags = CommandFlags.Buffered)
+        public static Task<IEnumerable<T>> QueryAsync<T>(this IDbQueryBuilder query, CommandFlags commandFlags = CommandFlags.Buffered)
         {
-            var stmt = query.Render();
-            var parameters = new Dapper.DynamicParameters();
-            var cmd = new CommandDefinition(stmt.CommandText,
-                commandType: System.Data.CommandType.Text,
-                parameters: parameters,
-                transaction: query.Transaction,
-                commandTimeout: query.CommandTimeout,
-                flags: commandFlags
-            );
-
-            foreach (var param in stmt.Parameters)
-            {
-                parameters.Add(param.ParameterName, param.Value, param.DbType, System.Data.ParameterDirection.Input, param.Size > 0 ? (int?)param.Size : null);
-            }
-
-            return Dapper.SqlMapper.QueryAsync<T>(query.Connection, cmd);
+            return Dapper.SqlMapper.QueryAsync<T>(query.Connection, CreateDapperCommand(query, commandFlags));
         }
 
-        /// <summary>
-        /// Adds an equals condition to the given query's where clause for the given field and string value.
-        /// </summary>
-        /// <param name="query"></param>
-        /// <param name="fieldName"></param>
-        /// <param name="equalsValue"></param>
-        /// <returns></returns>
-        public static IDbQueryWhereClause FieldEquals(this IDbQueryWhereClause query, string fieldName, DbString equalsValue)
-        {
-            return query.FieldMatch(fieldName, SqlOperator.Equal, equalsValue);
-        }
-
-        /// <summary>
-        /// Adds a condition to the given query's where clause using the given values.
-        /// </summary>
-        /// <param name="query"></param>
-        /// <param name="fieldName">The field name on which to compare.</param>
-        /// <param name="operator">The operator to use.</param>
-        /// <param name="value">The value that will be compared against the field.</param>
-        /// <returns></returns>
-        public static IDbQueryWhereClause FieldMatch(this IDbQueryWhereClause query, string fieldName, Csg.Data.Sql.SqlOperator @operator, DbString value)
-        {
-            var filter = new Csg.Data.Sql.SqlCompareFilter<string>(query.Root, fieldName, @operator, value.Value);
-                        
-            if (value.IsAnsi && value.IsFixedLength)
-            {
-                filter.DataType = DbType.AnsiStringFixedLength;
-            }
-            else if (value.IsAnsi)
-            {
-                filter.DataType = DbType.AnsiString;
-            }
-            else if (value.IsFixedLength)
-            {
-                filter.DataType = DbType.StringFixedLength;
-            }
-            else
-            {
-                filter.DataType = DbType.String;
-            }
-
-            if (value.Length >= 0)
-            {
-                filter.Size = value.Length;
-            }
-
-            query.AddFilter(filter);
-
-            return query;
-        }
-
-        /// <summary>
-        /// Adds a string pattern matching filter to the query's where clause.
-        /// </summary>
-        /// <param name="query"></param>
-        /// <param name="fieldName"></param>
-        /// <param name="operator"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static IDbQueryWhereClause StringMatch(this IDbQueryWhereClause query, string fieldName, Csg.Data.Sql.SqlWildcardDecoration @operator, DbString value)
-        {
-            var filter = new Csg.Data.Sql.SqlStringMatchFilter(query.Root, fieldName, @operator, value.Value);
-
-            if (value.IsAnsi && value.IsFixedLength)
-            {
-                filter.DataType = DbType.AnsiStringFixedLength;
-            }
-            else if (value.IsAnsi)
-            {
-                filter.DataType = DbType.AnsiString;
-            }
-            else if (value.IsFixedLength)
-            {
-                filter.DataType = DbType.StringFixedLength;
-            }
-            else
-            {
-                filter.DataType = DbType.String;
-            }
-
-            if (value.Length >= 0)
-            {
-                filter.Size = value.Length;
-            }
-
-            query.AddFilter(filter);
-
-            return query;
-        }
-
-        /// <summary>
-        /// Adds a condition to the given query's where clause using the given values.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="query"></param>
-        /// <param name="fieldName"></param>
-        /// <param name="operator"></param>
-        /// <param name="date"></param>
-        /// <returns></returns>
-        public static IDbQueryWhereClause FieldMatch<T>(this IDbQueryWhereClause query, string fieldName, SqlOperator @operator, DbDate<T> date) where T: struct
-        {
-            query.AddFilter(new Csg.Data.Sql.SqlCompareFilter(query.Root, fieldName, @operator, date.GetDbType(), date.Value));
-
-            return query;
-        }
-
-        /// <summary>
-        /// Adds a range condition to the given query's where clause.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="query"></param>
-        /// <param name="fieldName"></param>
-        /// <param name="begin"></param>
-        /// <param name="end"></param>
-        /// <returns></returns>
-        public static IDbQueryWhereClause FieldBetween<T>(this IDbQueryWhereClause query, string fieldName, DbDate<T> begin, DbDate<T> end) where T : struct
-        {
-            query.FieldMatch(fieldName, SqlOperator.GreaterThanOrEqual, begin).FieldMatch(fieldName, SqlOperator.LessThanOrEqual, end);
-
-            return query;
-        }
-       
     }
 
 }

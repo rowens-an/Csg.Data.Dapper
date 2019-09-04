@@ -1,12 +1,15 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.13
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29025.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{7A7F9514-C48D-4521-9A8F-165DF39B23F7}"
 	ProjectSection(SolutionItems) = preProject
 		build.cmd = build.cmd
 		build.ps1 = build.ps1
+		Directory.Build.props = Directory.Build.props
+		build\repo.props = build\repo.props
 		build\sources.props = build\sources.props
+		version.props = version.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Csg.Data.Dapper", "Csg.Data.Dapper\Csg.Data.Dapper.csproj", "{533F4E01-AA6B-449D-B57D-D6FBCAEDA1B2}"
