@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Csg.Data" Version="3.3.0-preview-00012" />
+    <PackageReference Include="Csg.Data" Version="3.1.7" />
     <PackageReference Include="Dapper" Version="1.60.6" />
   </ItemGroup>
 

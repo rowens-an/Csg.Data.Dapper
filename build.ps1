@@ -28,8 +28,20 @@ if ($BuildNumber) {
 	$BuildNumber = $BuildNumber.PadLeft(5, "0")
 }
 
+function Set-BuildNumberVersionInfo($BuildNo){
+	[xml]$xml = Get-Content .\version.props
+	$versionPrefix = $xml.Project.PropertyGroup.VersionPrefix;
+	$versionSuffix = $xml.Project.PropertyGroup.VersionSuffix;
+	if ($versionInfo.VersionSuffix) {
+		Write-Output "##vso[build.updatebuildnumber]$versionPrefix-$versionSuffix-$BuildNo"
+	} else {
+		Write-Output "##vso[build.updatebuildnumber]$versionPrefix-final-$BuildNo"
+	}
+}
+
 try {
 	. "$PSScriptRoot/bootstrap.ps1"	
+	Set-BuildNumberVersionInfo $BuildNumber
 	Get-BuildTools -Version $BuildToolsVersion | Out-Null
 	
 	# RESTORE
