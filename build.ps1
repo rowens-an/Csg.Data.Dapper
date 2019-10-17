@@ -31,11 +31,11 @@ if ($BuildNumber) {
 function Set-BuildNumberVersionInfo($BuildNo){
 	[xml]$xml = Get-Content .\version.props
 	$versionPrefix = $xml.Project.PropertyGroup.VersionPrefix;
-	$versionSuffix = $xml.Project.PropertyGroup.VersionSuffix;
-	if ($versionInfo.VersionSuffix) {
+	$versionSuffix = $xml.Project.PropertyGroup.VersionSuffix[0];
+	if ($versionSuffix) {
 		Write-Output "##vso[build.updatebuildnumber]$versionPrefix-$versionSuffix-$BuildNo"
 	} else {
-		Write-Output "##vso[build.updatebuildnumber]$versionPrefix-final-$BuildNo"
+		Write-Output "##vso[build.updatebuildnumber]$versionPrefix-release-$BuildNo"
 	}
 }
 
