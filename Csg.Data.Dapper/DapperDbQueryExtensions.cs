@@ -21,7 +21,7 @@ namespace Csg.Data
         /// <returns></returns>
         public static Dapper.CommandDefinition ToDapperCommand(this IDbQueryBuilder query, CommandFlags commandFlags = CommandFlags.Buffered)
         {
-            return query.Render().ToDapperCommand();
+            return query.Render().ToDapperCommand(query.Transaction, query.CommandTimeout, commandFlags);
         }
 
         /// <summary>
