@@ -3,11 +3,16 @@
     <EnableCsgDevRestoreSources>true</EnableCsgDevRestoreSources>
   </PropertyGroup>
   <PropertyGroup>
-	<PackageIconUrl>https://csgstorpub.blob.core.windows.net/images/csg-square-64.png</PackageIconUrl>	
-    <PackageProjectUrl>https://github.com/csgsolutions/csg.data.dapper</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/csgsolutions/Csg.Data.Dapper/blob/master/LICENSE</PackageLicenseUrl>
     <Owner>CSG</Owner>
     <Authors>CSG</Authors>
-    <Copyright>2018 Cornerstone Solutions Group</Copyright>
+    <Copyright>2019 Cornerstone Solutions Group</Copyright>
+    <PackageProjectUrl>https://github.com/csgsolutions/csg.data.dapper</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIconUrl>https://csgstorpub.blob.core.windows.net/images/csg-square-64.png</PackageIconUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>embedded</DebugType>
+    <RepositoryType>git</RepositoryType>
+    <Deterministic>false</Deterministic>
   </PropertyGroup>
 </Project>

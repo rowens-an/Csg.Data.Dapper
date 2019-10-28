@@ -10,38 +10,36 @@ Param(
 	$BuildToolsVersion = "1.0-latest",
 	[switch]
 	$NoTest,
+	[switch]
+	$NoPackage,
 	[string]
-	$BuildNumber=""
+	$PullRequestNumber=""
 )
+. "$PSScriptRoot/bootstrap.ps1"	
 
 $Solution =  "$(Get-Item -Path *.sln | Select-Object -First 1)"
 $OutputPackages = @(
 	".\Csg.Data.Dapper\Csg.Data.Dapper.csproj"
 )
 $TestProjects = @() #Get-Item -Path tests\**\*Tests.csproj | %{ $_.FullName }
+$SkipPackage = $NoPackage.IsPresent
 
-Write-Host "=============================================================================="
-Write-Host "The Build Script"
-Write-Host "=============================================================================="
-
-if ($BuildNumber) {
-	$BuildNumber = $BuildNumber.PadLeft(5, "0")
+if ($PullRequestNumber) {
+    Write-Host "Building for a pull request (#$PullRequestNumber), skipping packaging." -ForegroundColor Yellow
+    $SkipPackage = $true
 }
 
-function Set-BuildNumberVersionInfo($BuildNo){
-	[xml]$xml = Get-Content .\version.props
-	$versionPrefix = $xml.Project.PropertyGroup.VersionPrefix;
-	$versionSuffix = $xml.Project.PropertyGroup.VersionSuffix[0];
-	if ($versionSuffix) {
-		Write-Output "##vso[build.updatebuildnumber]$versionPrefix-$versionSuffix-$BuildNo"
-	} else {
-		Write-Output "##vso[build.updatebuildnumber]$versionPrefix-release-$BuildNo"
-	}
-}
+Write-Host "==============================================================================" -ForegroundColor DarkYellow
+Write-Host "The Build Script for Csg.ListQuery"
+Write-Host "==============================================================================" -ForegroundColor DarkYellow
+Write-Host "Build Tools:`t$BuildToolsVersion"
+Write-Host "Solution:`t$Solution"
+Write-Host "Skip Tests:`t$NoTest"
+Write-Host "Pull Req:`t$PullRequestNumber"
+Write-Host "==============================================================================" -ForegroundColor DarkYellow
 
 try {
-	. "$PSScriptRoot/bootstrap.ps1"	
-	Set-BuildNumberVersionInfo $BuildNumber
+
 	Get-BuildTools -Version $BuildToolsVersion | Out-Null
 	
 	# RESTORE
@@ -53,7 +51,7 @@ try {
 
 	# BUILD SOLUTION
 	Write-Host "Performing build..." -ForegroundColor Magenta	
-	dotnet build $SOLUTION --configuration $Configuration /p:BuildNumber=$BuildNumber
+	dotnet build $SOLUTION --configuration $Configuration
 	if ($LASTEXITCODE -ne 0) {
 		throw "Build failed with exit code $LASTEXITCODE."
 	}
@@ -64,7 +62,7 @@ try {
 		foreach ($test_proj in $TestProjects) {
 			Write-Host "Testing $test_proj"			
 			#Note: The --logger parameter is for specifically for mstest to make it output test results
-			dotnet test $test_proj --no-build --configuration $Configuration --logger "trx;logfilename=TEST-$(get-date -format yyyyMMddHHmmss).xml"
+			dotnet test $test_proj --no-build --configuration $Configuration --logger "trx;logfilename=TEST-$(get-date -format yyyyMMddHHmmss).trx"
 			if ($LASTEXITCODE -ne 0) {
 				throw "Test failed with code $LASTEXITCODE"
 			}
@@ -72,11 +70,11 @@ try {
 	}
 
 	# CREATE NUGET PACKAGES
-	if ( $OutputPackages.Length -gt 0 ) {
+	if ( !($SkipPackage) -and $OutputPackages.Length -gt 0 ) {
 		Write-Host "Packaging..."  -ForegroundColor Magenta
 		foreach ($pack_proj in $OutputPackages){
 			Write-Host "Packing $pack_proj"
-			dotnet pack $pack_proj --no-build --configuration $Configuration /p:BuildNumber=$BuildNumber
+			dotnet pack $pack_proj --no-build --configuration $Configuration
 			if ($LASTEXITCODE -ne 0) {
 				throw "Pack failed with code $result"
 			}
