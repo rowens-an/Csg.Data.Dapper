@@ -30,7 +30,7 @@ if ($PullRequestNumber) {
 }
 
 Write-Host "==============================================================================" -ForegroundColor DarkYellow
-Write-Host "The Build Script for Csg.ListQuery"
+Write-Host "The Build Script for Csg.Data.Dapper"
 Write-Host "==============================================================================" -ForegroundColor DarkYellow
 Write-Host "Build Tools:`t$BuildToolsVersion"
 Write-Host "Solution:`t$Solution"
