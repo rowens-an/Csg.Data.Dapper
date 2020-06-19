@@ -1,0 +1,35 @@
+# ASP.NET
+# Build and test ASP.NET projects.
+# Add steps that publish symbols, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+- task: PowerShell@1
+  displayName: 'Build + Test'
+  inputs:
+    scriptName: build.ps1
+
+- task: PublishTestResults@2
+  displayName: 'Publish Test Results'
+  inputs:
+    testResultsFormat: VSTest
+    testResultsFiles: '**\TEST-*.xml'
+
+- task: CopyFiles@2
+  displayName: 'Copy nupkgs'
+  inputs:
+    Contents: '**\bin\**\*.nupkg'
+    TargetFolder: '$(build.artifactstagingdirectory)\nupkgs'
+    flattenFolders: true
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: nupkgs'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)\nupkgs'
+    ArtifactName: nupkgs
