@@ -7,7 +7,7 @@ Param(
 	[alias("c")][string]
 	$Configuration = "Release",
 	[string]
-	$BuildToolsVersion = "1.0-latest",
+	$BuildToolsVersion = "1.1.0-latest",
 	[switch]
 	$NoTest,
 	[switch]
@@ -15,20 +15,18 @@ Param(
 	[string]
 	$PullRequestNumber=""
 )
-. "$PSScriptRoot/bootstrap.ps1"	
 
 $Solution =  "$(Get-Item -Path *.sln | Select-Object -First 1)"
 $OutputPackages = @(
 	".\Csg.Data.Dapper\Csg.Data.Dapper.csproj"
 )
-$TestProjects = @() #Get-Item -Path tests\**\*Tests.csproj | %{ $_.FullName }
+$TestProjects = @() #Get-Item -Path tests\**\*UnitTest.csproj | %{ $_.FullName }
 $SkipPackage = $NoPackage.IsPresent
 
 if ($PullRequestNumber) {
     Write-Host "Building for a pull request (#$PullRequestNumber), skipping packaging." -ForegroundColor Yellow
     $SkipPackage = $true
 }
-
 Write-Host "==============================================================================" -ForegroundColor DarkYellow
 Write-Host "The Build Script for Csg.Data.Dapper"
 Write-Host "==============================================================================" -ForegroundColor DarkYellow
@@ -39,19 +37,23 @@ Write-Host "Pull Req:`t$PullRequestNumber"
 Write-Host "==============================================================================" -ForegroundColor DarkYellow
 
 try {
-
+	. "$PSScriptRoot/bootstrap.ps1"
 	Get-BuildTools -Version $BuildToolsVersion | Out-Null
-	
+
+	# Get msbuild exe reference so we can use that instead of dotnet build, since we have a legacy project type (sqlproj)
+	$msbuild = Find-MSBuild
+
 	# RESTORE
 	Write-Host "Restoring Packages..." -ForegroundColor Magenta
-	dotnet restore $SOLUTION
+	& $msbuild /t:Restore /v:m $SOLUTION
 	if ($LASTEXITCODE -ne 0) {
 		throw "Package restore failed with exit code $LASTEXITCODE."
 	}
 
 	# BUILD SOLUTION
-	Write-Host "Performing build..." -ForegroundColor Magenta	
-	dotnet build $SOLUTION --configuration $Configuration
+	Write-Host "Performing build..." -ForegroundColor Magenta
+	# we are using msbuild here because the dacpac (database) project is a legacy (non-SDK) project.
+	& $msbuild /p:Configuration=$Configuration /v:m $SOLUTION
 	if ($LASTEXITCODE -ne 0) {
 		throw "Build failed with exit code $LASTEXITCODE."
 	}
@@ -60,9 +62,8 @@ try {
 	if ( !($NoTest.IsPresent) -and $TestProjects.Length -gt 0 ) {
 		Write-Host "Performing tests..." -ForegroundColor Magenta
 		foreach ($test_proj in $TestProjects) {
-			Write-Host "Testing $test_proj"			
-			#Note: The --logger parameter is for specifically for mstest to make it output test results
-			dotnet test $test_proj --no-build --configuration $Configuration --logger "trx;logfilename=TEST-$(get-date -format yyyyMMddHHmmss).trx"
+			Write-Host "Testing $test_proj"
+			dotnet test $test_proj --no-build --configuration $Configuration #--filter TestCategory=Unit
 			if ($LASTEXITCODE -ne 0) {
 				throw "Test failed with code $LASTEXITCODE"
 			}
@@ -70,7 +71,7 @@ try {
 	}
 
 	# CREATE NUGET PACKAGES
-	if ( !($SkipPackage) -and $OutputPackages.Length -gt 0 ) {
+	if ( $OutputPackages.Length -gt 0 ) {
 		Write-Host "Packaging..."  -ForegroundColor Magenta
 		foreach ($pack_proj in $OutputPackages){
 			Write-Host "Packing $pack_proj"
@@ -81,11 +82,19 @@ try {
 		}
 	}
 
-	Write-Host "All Done. This build is great! (as far as I can tell)" -ForegroundColor Green
+	# Publish asp.net core projects
+	Write-Host "Publishing..."  -ForegroundColor Magenta
+	dotnet publish $PublishProject --framework net461 --no-build --no-restore --configuration $Configuration
+
+	if ($LASTEXITCODE -ne 0) {
+		throw "Publish failed with code $result"
+	}
+
+	Write-Host "All Done. Let the record show that this build worked. " -ForegroundColor Green
 	exit 0
 } catch {
 	Write-Host "ERROR: An error occurred and the build was aborted." -ForegroundColor White -BackgroundColor Red
-	Write-Error $_	
+	Write-Error $_
 	exit 3
 } finally {
 	Remove-Module 'BuildTools' -ErrorAction Ignore
