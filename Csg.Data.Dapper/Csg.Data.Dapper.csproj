@@ -4,7 +4,7 @@
     <TargetFrameworks>netstandard2.0;net461;net462;net47;net471;net472</TargetFrameworks>
     <AssemblyName>Csg.Data.Dapper</AssemblyName>
     <PackageId>Csg.Data.Dapper</PackageId>   
-    <langversion>latest</langversion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
