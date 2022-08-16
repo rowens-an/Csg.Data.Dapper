@@ -83,12 +83,12 @@ try {
 	}
 
 	# Publish asp.net core projects
-	Write-Host "Publishing..."  -ForegroundColor Magenta
-	dotnet publish $PublishProject --framework net461 --no-build --no-restore --configuration $Configuration
+	#Write-Host "Publishing..."  -ForegroundColor Magenta
+	#dotnet publish $PublishProject --framework net461 --no-build --no-restore --configuration $Configuration
 
-	if ($LASTEXITCODE -ne 0) {
-		throw "Publish failed with code $result"
-	}
+	#if ($LASTEXITCODE -ne 0) {
+	#	throw "Publish failed with code $result"
+	#}
 
 	Write-Host "All Done. Let the record show that this build worked. " -ForegroundColor Green
 	exit 0
