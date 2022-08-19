@@ -43,7 +43,7 @@ function Get-BuildTools(
 	Write-Host "Initializing build tools..." -NoNewline
 
 	if ($env:CI_BUILDTOOLS_PATH) {
-		$remotePath = "$($env:CI_BUILDTOOLS_PATH)/$Version.zip"
+		$remotePath = "$($env:CI_BUILDTOOLS_PATH)/BuildTools-$Version.zip"
 	} else {
 		$remotePath = "https://csgstorpub.blob.core.windows.net/buildtools/BuildTools-$Version.zip"
 	}

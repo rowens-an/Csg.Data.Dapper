@@ -5,7 +5,7 @@
   <PropertyGroup>
     <Owner>CSG</Owner>
     <Authors>CSG</Authors>
-    <Copyright>2019 Cornerstone Solutions Group</Copyright>
+    <Copyright>2022 Cornerstone Solutions Group</Copyright>
     <PackageProjectUrl>https://github.com/csgsolutions/csg.data.dapper</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageIconUrl>https://csgstorpub.blob.core.windows.net/images/csg-square-64.png</PackageIconUrl>
