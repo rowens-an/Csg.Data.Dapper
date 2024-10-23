@@ -1,18 +1,18 @@
 <Project>
-  <PropertyGroup>
-    <EnableCsgDevRestoreSources>true</EnableCsgDevRestoreSources>
-  </PropertyGroup>
-  <PropertyGroup>
-    <Owner>CSG</Owner>
-    <Authors>CSG</Authors>
-    <Copyright>2022 Cornerstone Solutions Group</Copyright>
-    <PackageProjectUrl>https://github.com/csgsolutions/csg.data.dapper</PackageProjectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageIconUrl>https://csgstorpub.blob.core.windows.net/images/csg-square-64.png</PackageIconUrl>
-    <PackageIcon>icon.png</PackageIcon>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>embedded</DebugType>
-    <RepositoryType>git</RepositoryType>
-    <Deterministic>false</Deterministic>
-  </PropertyGroup>
+    <PropertyGroup>
+        <EnableCsgDevRestoreSources>true</EnableCsgDevRestoreSources>
+    </PropertyGroup>
+    <PropertyGroup>
+        <Owner>CSG</Owner>
+        <Authors>CSG</Authors>
+        <Copyright>2022 Cornerstone Solutions Group</Copyright>
+        <PackageProjectUrl>https://github.com/csgsolutions/csg.data.dapper</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageIconUrl>https://csgstorpub.blob.core.windows.net/images/csg-square-64.png</PackageIconUrl>
+        <PackageIcon>icon.png</PackageIcon>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>embedded</DebugType>
+        <RepositoryType>git</RepositoryType>
+        <Deterministic>false</Deterministic>
+    </PropertyGroup>
 </Project>

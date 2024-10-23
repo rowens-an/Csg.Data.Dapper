@@ -1,11 +1,11 @@
 <Project>
-  <Import Project="build/repo.props"/>
-  <Import Project="build/sources.props"/>
-  <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.5.109" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\icon.png" Pack="true" PackagePath="\"/>
-  </ItemGroup>
+    <Import Project="build/repo.props"/>
+    <Import Project="build/sources.props"/>
+    <ItemGroup>
+        <PackageReference Include="Nerdbank.GitVersioning" Version="3.5.109" PrivateAssets="All"/>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="..\icon.png" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 </Project>
